@@ -1,0 +1,171 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100vh;
+}
+
+body, button, input, select, textarea {
+  font-family: 'Roboto', sans-serif;
+  font-size: 16px;
+}
+
+ul {
+  list-style: none;
+}
+
+a {
+  text-decoration: none;
+}
+
+.projetos {
+  height: 100%;
+}
+
+.projetos ul {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  grid-auto-rows: 1fr;
+  max-width: 960px;
+  margin: 48px auto 0;
+}
+
+.projetos ul li {
+  background-color: #0067a3;
+  border-radius: 8px;
+  box-shadow: 4px 4px 8px 0px rgba(0,0,0,0.6);
+}
+
+.projetos ul li:hover{
+  transform: translateX(4px);
+  transition: transform 0.3s;
+  background-color: #00507e;
+}
+
+.projetos ul li a {
+  color: #ffffff;
+  font-weight: bold;
+  font-size: 20px;
+  letter-spacing: 0.6px;
+  height: 100%;
+}
+
+.projetos ul li a span {
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 16px;
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+header {
+  display: grid;
+  background-color: #00507e;
+  padding: 12px;
+  grid-template-columns: auto auto auto;
+}
+
+header h1 {
+  text-align: center;
+}
+
+header h1 a {
+  color: #ffffff;
+}
+
+header select {
+  max-width: 250px;
+  border-radius: 4px;
+}
+
+.quadro {
+  flex: 1;
+  padding: 12px 8px;
+  display: flex;
+  background-color: #0067a3;
+  align-items: flex-start;
+  overflow-x: auto;
+}
+.quadro ul{
+  background-color: #ebecf0;
+  max-width: 280px;
+  min-width: 280px;
+  padding: 8px;
+  flex: 1;
+  border-radius: 4px;
+}
+
+.quadro ul h2 {
+  font-size: 20px;
+  font-weight: bold;
+  padding-left: 12px;
+}
+
+.quadro ul li {
+  background-color: #ffffff;
+  margin: 8px 4px;
+  padding: 16px 8px;
+  border-radius: 4px;
+  font-size: 20px;
+  box-shadow: 2px 2px 2px 0px rgba(0,0,0,0.1);
+}
+
+.quadro ul li:hover {
+  transform: translateX(4px);
+  transition: transform 0.3s;
+}
+
+.quadro ul li span{
+  word-wrap: break-word;
+}
+
+.quadro ul+ul{
+  margin-left: 48px;
+}
+
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content/Box */
+.modal-content {
+  background-color: #fefefe;
+  margin: 15% auto; /* 15% from the top and centered */
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%; /* Could be more or less, depending on screen size */
+}
+
+/* The Close Button */
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
