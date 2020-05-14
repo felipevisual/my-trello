@@ -5,6 +5,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using VS.MyTrello.API.Data;
+using VS.MyTrello.API.Data.Repositories;
+using VS.MyTrello.API.Data.Repositories.Interfaces;
 
 namespace VS.MyTrello.API
 {
@@ -20,7 +22,11 @@ namespace VS.MyTrello.API
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<AppDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("Conexao")));
+            services.AddDbContext<AppDbContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("Conexao")));
+
+            services.AddTransient<IProjetoRepository, ProjetoRepository>();
+            services.AddTransient<IEstadoRepository, EstadoRepository>();
             services.AddControllers();
         }
 
@@ -34,6 +40,10 @@ namespace VS.MyTrello.API
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors(
+                options => options.SetIsOriginAllowed(x => _ = true).AllowAnyMethod().AllowAnyHeader().AllowCredentials()
+            );
 
             app.UseAuthorization();
 

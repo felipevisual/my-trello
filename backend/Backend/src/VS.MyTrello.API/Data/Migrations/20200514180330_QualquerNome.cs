@@ -2,17 +2,30 @@
 
 namespace VS.MyTrello.API.Data.Migrations
 {
-    public partial class ProjetosSprintsEAtividades : Migration
+    public partial class QualquerNome : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "Estados",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Titulo = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Estados", x => x.Id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "Projetos",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Descricao = table.Column<string>(nullable: true)
+                    Descricao = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -26,7 +39,7 @@ namespace VS.MyTrello.API.Data.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Nome = table.Column<string>(nullable: true),
-                    ProjetoId = table.Column<int>(nullable: true)
+                    ProjetoId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -36,7 +49,7 @@ namespace VS.MyTrello.API.Data.Migrations
                         column: x => x.ProjetoId,
                         principalTable: "Projetos",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -45,20 +58,31 @@ namespace VS.MyTrello.API.Data.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Nome = table.Column<string>(nullable: true),
-                    Estado = table.Column<int>(nullable: false),
-                    SprintId = table.Column<int>(nullable: true)
+                    Nome = table.Column<string>(nullable: false),
+                    EstadoId = table.Column<int>(nullable: false),
+                    SprintId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Atividades", x => x.Id);
                     table.ForeignKey(
+                        name: "FK_Atividades_Estados_EstadoId",
+                        column: x => x.EstadoId,
+                        principalTable: "Estados",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
                         name: "FK_Atividades_Sprints_SprintId",
                         column: x => x.SprintId,
                         principalTable: "Sprints",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Atividades_EstadoId",
+                table: "Atividades",
+                column: "EstadoId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Atividades_SprintId",
@@ -75,6 +99,9 @@ namespace VS.MyTrello.API.Data.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Atividades");
+
+            migrationBuilder.DropTable(
+                name: "Estados");
 
             migrationBuilder.DropTable(
                 name: "Sprints");

@@ -1,39 +1,30 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+
+import api from '../../services/api';
+
 import { ListaDeProjetos } from './styles';
 
-const projetos = [
-  {
-    id: 1,
-    descricao: 'Teste 1 teseeeeeeeee aaaaaaaa',
-  },
-  {
-    id: 2,
-    descricao: 'Teste 2',
-  },
-  {
-    id: 3,
-    descricao: 'Teste 3',
-  },
-  {
-    id: 4,
-    descricao: 'Teste 4',
-  },
-  {
-    id: 5,
-    descricao: 'Teste 5',
-  },
-  {
-    id: 6,
-    descricao: 'Teste 6',
-  },
-];
+interface Projeto {
+  id: number;
+  descricao: string;
+}
 
 const Projetos: React.FC = () => {
+  const [projetos, setProjetos] = useState<Projeto[]>([]);
+
+  useEffect(() => {
+    async function carregarDados(): Promise<void> {
+      const response = await api.get<Projeto[]>('projetos');
+      setProjetos([...projetos, ...response.data]);
+    }
+    carregarDados();
+  }, []);
+
   return (
     <ListaDeProjetos>
       <ul>
-        {projetos.map((projeto) => (
+        {projetos.map(projeto => (
           <li key={projeto.id}>
             <Link to={`/projetos/${projeto.id}`}>
               <span>{projeto.descricao}</span>

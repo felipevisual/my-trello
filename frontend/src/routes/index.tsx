@@ -7,7 +7,7 @@ import Quadro from '../pages/Quadro';
 const Routes: React.FC = () => (
   <Switch>
     <Route path="/" exact component={Projetos} />
-    <Route path="/projetos" component={Quadro} />
+    <Route path="/projetos/:id" component={Quadro} />
   </Switch>
 );
 

@@ -1,94 +1,79 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, ChangeEvent } from 'react';
+import { Link, useParams } from 'react-router-dom';
 
-import { Link } from 'react-router-dom';
+import Axios from 'axios';
+import api from '../../services/api';
+
 import { Delimitador, QuadroDeAtividades, Modal } from './styles';
 
-const sprints = [
-  {
-    id: 1,
-    nome: 'Sprint 1',
-  },
-  {
-    id: 2,
-    nome: 'Sprint 2',
-  },
-  {
-    id: 3,
-    nome: 'Sprint 3',
-  },
-];
+interface Sprint {
+  id: number;
+  nome: string;
+}
 
-const estados = [
-  {
-    id: 1,
-    titulo: 'A Fazer',
-    atividades: [
-      {
-        id: 1,
-        nome: 'Atividade 1',
-      },
-      {
-        id: 2,
-        nome: 'Atividade 2',
-      },
-      {
-        id: 3,
-        nome: 'Atividade 3',
-      },
-    ],
-  },
-  {
-    id: 2,
-    titulo: 'Fazendo',
-    atividades: [
-      {
-        id: 1,
-        nome: 'Atividade 4',
-      },
-      {
-        id: 2,
-        nome: 'Atividade 5',
-      },
-      {
-        id: 3,
-        nome: 'Atividade 6',
-      },
-    ],
-  },
-  {
-    id: 3,
-    titulo: 'Feito',
-    atividades: [
-      {
-        id: 1,
-        nome: 'Atividade 7',
-      },
-      {
-        id: 2,
-        nome: 'Atividade 8',
-      },
-      {
-        id: 3,
-        nome: 'Atividade 9',
-      },
-    ],
-  },
-];
+interface Atividade {
+  id: number;
+  nome: string;
+  estadoId: number;
+}
+
+interface Estado {
+  id: number;
+  titulo: string;
+}
 
 const Quadro: React.FC = () => {
+  const { id } = useParams();
   const [nome, setNome] = useState('');
   const [visivel, setVisivel] = useState(false);
+  const [sprints, setSprints] = useState<Sprint[]>([]);
+  const [atividades, setAtividades] = useState<Atividade[]>([]);
+  const [estados, setEstados] = useState<Estado[]>([]);
+
+  async function carregarSprints(): Promise<Sprint[]> {
+    const response = await api.get<Sprint[]>(`projetos/${id}/sprints`);
+    setSprints([...sprints, ...response.data]);
+    return response.data;
+  }
+
+  async function carregarAtividades(sprintId: number): Promise<void> {
+    const response = await api.get<Atividade[]>(
+      `atividades/sprints/${sprintId}`,
+    );
+
+    const dummy: Array<Atividade> = [];
+    setAtividades([...dummy, ...response.data]);
+  }
+
+  async function carregarEstados(): Promise<void> {
+    const response = await api.get<Estado[]>(`estados`);
+    setEstados([...estados, ...response.data]);
+  }
+
+  useEffect(() => {
+    async function carregarDados(): Promise<void> {
+      const mySprints = await carregarSprints();
+      carregarAtividades(mySprints[0]?.id);
+      carregarEstados();
+    }
+    carregarDados();
+  }, []);
 
   function handleModal(titulo: string): void {
     setNome(titulo);
     setVisivel(true);
   }
 
+  function handleChangeSprint(event: ChangeEvent<HTMLSelectElement>): void {
+    const sprintId: number = (event.target.value as unknown) as number;
+    carregarAtividades(sprintId);
+  }
+
   return (
     <>
       <Delimitador>
         <header>
-          <select>
+          <select onChange={handleChangeSprint}>
             {sprints.map(sprint => (
               <option value={sprint.id} key={sprint.id}>
                 {sprint.nome}
@@ -103,14 +88,16 @@ const Quadro: React.FC = () => {
           {estados.map(estado => (
             <ul key={estado.id}>
               <h2>{estado.titulo}</h2>
-              {estado.atividades.map(atividade => (
-                <li
-                  key={atividade.id}
-                  onClick={() => handleModal(atividade.nome)}
-                >
-                  <span>{atividade.nome}</span>
-                </li>
-              ))}
+              {atividades
+                .filter(atividade => atividade.estadoId === estado.id)
+                .map(atividade => (
+                  <li
+                    key={atividade.id}
+                    onClick={() => handleModal(atividade.nome)}
+                  >
+                    <span>{atividade.nome}</span>
+                  </li>
+                ))}
             </ul>
           ))}
         </QuadroDeAtividades>
@@ -118,7 +105,9 @@ const Quadro: React.FC = () => {
 
       <Modal visibilidade={visivel}>
         <div>
-          <span onClick={() => setVisivel(false)}>&times;</span>
+          <button type="button" onClick={() => setVisivel(false)}>
+            &times;
+          </button>
           <p>{nome}</p>
         </div>
       </Modal>

@@ -10,16 +10,11 @@ namespace VS.MyTrello.API.Models
         public int Id { get; set; }
         [Required(ErrorMessage = "Campo obrigatório")]
         public string Nome { get; set; }
-        public Estados Estado { get; set; } = Estados.AFazer;
+        public int EstadoId { get; set; }
+        [JsonIgnore]
+        public Estado Estado { get; set; }
         public int SprintId { get; set; }
         [JsonIgnore]
         public Sprint Sprint { get; set; }
-    }
-
-    public enum Estados
-    {
-        AFazer,
-        Fazendo,
-        Feito
     }
 }

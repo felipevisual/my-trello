@@ -96,11 +96,13 @@ export const Modal = styled.div<Propriedades>`
     border: 1px solid #888;
     width: 80%; /* Could be more or less, depending on screen size */
 
-    span {
+    button {
       color: #aaa;
       float: right;
       font-size: 28px;
       font-weight: bold;
+      border: none;
+      background: transparent;
 
       &:hover,
       &:focus {

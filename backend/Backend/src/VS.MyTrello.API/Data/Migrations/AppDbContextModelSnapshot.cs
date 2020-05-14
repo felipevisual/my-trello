@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using VS.MyTrello.API.Data;
 
 namespace VS.MyTrello.API.Data.Migrations
 {
@@ -25,7 +24,7 @@ namespace VS.MyTrello.API.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("Estado")
+                    b.Property<int>("EstadoId")
                         .HasColumnType("int");
 
                     b.Property<string>("Nome")
@@ -37,9 +36,26 @@ namespace VS.MyTrello.API.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("EstadoId");
+
                     b.HasIndex("SprintId");
 
                     b.ToTable("Atividades");
+                });
+
+            modelBuilder.Entity("VS.MyTrello.API.Models.Estado", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Titulo")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Estados");
                 });
 
             modelBuilder.Entity("VS.MyTrello.API.Models.Projeto", b =>
@@ -80,6 +96,12 @@ namespace VS.MyTrello.API.Data.Migrations
 
             modelBuilder.Entity("VS.MyTrello.API.Models.Atividade", b =>
                 {
+                    b.HasOne("VS.MyTrello.API.Models.Estado", "Estado")
+                        .WithMany()
+                        .HasForeignKey("EstadoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("VS.MyTrello.API.Models.Sprint", "Sprint")
                         .WithMany()
                         .HasForeignKey("SprintId")

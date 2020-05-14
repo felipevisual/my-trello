@@ -14,6 +14,7 @@ namespace VS.MyTrello.API.Data
         public DbSet<Atividade> Atividades { get; set; }
         public DbSet<Projeto> Projetos { get; set; }
         public DbSet<Sprint> Sprints { get; set; }
+        public DbSet<Estado> Estados { get; set; }
 
     }
 

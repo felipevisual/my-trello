@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using VS.MyTrello.API.Data;
+using VS.MyTrello.API.Data.Repositories;
+using VS.MyTrello.API.Data.Repositories.Interfaces;
 using VS.MyTrello.API.Models;
 
 namespace VS.MyTrello.API.Controllers
@@ -10,24 +12,23 @@ namespace VS.MyTrello.API.Controllers
     [ApiController]
     public class ProjetosController : ControllerBase
     {
-        private readonly AppDbContext _context;
+        private readonly IProjetoRepository _projetoRepository;
 
-        public ProjetosController(AppDbContext context)
+        public ProjetosController(IProjetoRepository projetoRepository)
         {
-            _context = context;
+            _projetoRepository = projetoRepository;
         }
 
         [HttpGet]
         public IEnumerable<Projeto> Get()
         {
-            return _context.Projetos.ToList();
+            return _projetoRepository.ObterTodos();
         }
 
         [HttpPost]
         public ActionResult<Projeto> Post([FromBody] Projeto projeto)
         {
-            _context.Projetos.Add(projeto);
-            _context.SaveChanges();
+            _projetoRepository.Criar(projeto);
             return Created($"projetos/{projeto.Id}", projeto);
         }
     }
